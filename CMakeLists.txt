@@ -35,7 +35,7 @@ pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
 
-add_executable(ADC ADC.c )
+add_executable(ADC ADC.c ssd1306.c)
 
 pico_set_program_name(ADC "ADC")
 pico_set_program_version(ADC "0.1")
@@ -54,8 +54,12 @@ target_include_directories(ADC PRIVATE
 )
 
 # Add any user requested libraries
-target_link_libraries(ADC 
-        
+target_link_libraries(ADC
+    hardware_i2c    
+    hardware_pio
+    hardware_clocks
+    hardware_pwm
+    hardware_adc
         )
 
 pico_add_extra_outputs(ADC)
