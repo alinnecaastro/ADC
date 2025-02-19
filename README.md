@@ -1,10 +1,10 @@
-## ADC
-1. Introdução
+## Conversro Análogico em Digital
+
+## Introdução
 O objetivo deste projeto é explorar as funcionalidades do RP2040, um microcontrolador baseado na arquitetura ARM Cortex-M0+, através do uso do conversor analógico-digital (ADC), controle de LEDs RGB via PWM e interação com um display SSD1306 utilizando o protocolo I2C. O projeto visa controlar a intensidade luminosa dos LEDs RGB com base nos valores de um joystick e, ao mesmo tempo, exibir graficamente a posição do joystick em um display OLED.
 
 ## Estrutura do Projeto  
-- **build/** → Diretório de compilação gerado pelo CMake. 
-- **codigo_txt** → Codigos de atividade anteriores que foram usadas para ajudar nessa.  
+- **build/** → Diretório de compilação gerado pelo CMake.   
 - **debounce.c** → Arquivo que importa a interrupção e o debounce do codigo 
 - **definicoes.h** → Arquivo que importa as variaveis dos botoes, matriz,delay,led... 
 - **pwm_led.c** → Arquivo para importar os PWM dos leds 
