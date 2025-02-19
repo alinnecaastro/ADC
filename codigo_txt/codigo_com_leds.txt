@@ -16,8 +16,8 @@
 #include "pico/bootrom.h"
 #include "hardware/adc.h"
 
-#define JOYSTICK_X_PIN 27  // Pino ADC conectado ao eixo Y do joystick
-#define JOYSTICK_Y_PIN 26  // Pino ADC conectado ao eixo Y do joystick
+#define JOYSTICK_X_PIN 26  // Pino ADC conectado ao eixo Y do joystick
+#define JOYSTICK_Y_PIN 27  // Pino ADC conectado ao eixo Y do joystick
 #define BUTTON_PIN 22
 #define LED_GREEN_PIN 11
 #define LED_BLUE_PIN 12   // Pino PWM conectado ao LED Azul
