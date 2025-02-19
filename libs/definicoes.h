@@ -7,7 +7,7 @@
 #define LED_RED_PIN 13   // Pino PWM conectado ao LED Azul
 #define CENTER_VALUE 2048
 #define JOYSTICK_MAX 4095
-#define DEADZONE 110
+#define DEADZONE 110 //Pequeno Delay para deixar os leds apagados
 #define BUTTON_A_PIN  5
 
 

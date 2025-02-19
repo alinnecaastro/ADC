@@ -23,24 +23,13 @@ bool led_green_state = false;       // Estado do LED Verde
 bool pwm_leds_enabled = true;       // Estado dos LEDs PWM (Vermelho e Azul)
 uint8_t border_style = 0;           // Estilo da borda do display (0, 1, 2, ...)
 
-
-
-
 // Função para ler o valor do joystick
 uint16_t read_joystick(uint pin) {
     adc_select_input(pin - 26);
     return adc_read();
 }
 
-void draw_border(ssd1306_t *disp, uint8_t thickness) {
-    for (uint8_t i = 0; i < thickness; i++) {
-        ssd1306_rect(disp, i, i, WIDTH - 2*i, HEIGHT - 2*i, true, false);  // Desenha a borda
-    }
-    ssd1306_send_data(disp);  // Atualiza o display
-}
-
-
-
+//Função leitura do botao da joystick
 void joystick_button_pressed() {
     static uint32_t last_press_time = 0;  // Armazena o tempo do último pressionamento
     uint32_t current_time = to_ms_since_boot(get_absolute_time());
@@ -50,7 +39,6 @@ void joystick_button_pressed() {
         led_green_state = !led_green_state;      // Alterna o estado do LED Verde
         gpio_put(LED_GREEN_PIN, led_green_state); // Atualiza o estado do LED
         
-
         // Alterna a espessura da borda entre 1 e 5
         if (border_thickness == 5) {
             border_thickness = 1;  // Se a espessura for 5, altera para 1
@@ -61,6 +49,7 @@ void joystick_button_pressed() {
         last_press_time = current_time;  // Atualiza o tempo do último pressionamento
     }
 }
+
 // Função para ativar/desativar os LEDs PWM
 void button_a_pressed() {
     static uint32_t last_press_time = 0;  // Armazena o tempo do último pressionamento
@@ -72,9 +61,17 @@ void button_a_pressed() {
         last_press_time = current_time;  // Atualiza o tempo do último pressionamento
     }
 }
+
+//Função para desenhar a borda
+void draw_border(ssd1306_t *disp, uint8_t thickness) {
+    for (uint8_t i = 0; i < thickness; i++) {
+        ssd1306_rect(disp, i, i, WIDTH - 2*i, HEIGHT - 2*i, true, false);  // Desenha a borda
+    }
+    ssd1306_send_data(disp);  // Atualiza o display
+}
+
 // Função para desenhar um quadrado no display
 void draw_square(ssd1306_t *disp, int x, int y) {
-
     ssd1306_rect(disp, x, y, SQUARE_SIZE, SQUARE_SIZE, true,true); // Desenha o quadrado
     ssd1306_send_data(disp); // Atualiza o display
 }
@@ -123,8 +120,7 @@ int main() {
     ssd1306_fill(&ssd, false); // Limpa o display inicialmente
     ssd1306_send_data(&ssd);
 
-    // Desenha a borda inicial (apenas uma vez)
-  // Desenha a borda com a espessura atual
+    // Desenha a borda com a espessura atual
     draw_border(&ssd, border_thickness);
 
     // Inicialização do pino do botão A
@@ -138,6 +134,7 @@ int main() {
     gpio_set_dir(LED_GREEN_PIN, GPIO_OUT);
     gpio_put(LED_GREEN_PIN, led_green_state);  // Inicializa o LED Verde como apagado
 
+    gpio_set_irq_enabled_with_callback(LED_GREEN_PIN, GPIO_IRQ_EDGE_FALL, true, &gpio_callback);   
 
     // Posição inicial do quadrado
     int square_y = (WIDTH - SQUARE_SIZE)/2;
@@ -152,21 +149,22 @@ int main() {
         int16_t x_diff = CENTER_VALUE - x_value;
         int16_t y_diff = y_value - CENTER_VALUE;
 
-       // Mapeia o valor do eixo Y para o brilho do LED Vermelho
-uint8_t brightness_red = 0;
-if (y_value < (CENTER_VALUE - DEADZONE)) {
-    brightness_red = (CENTER_VALUE - DEADZONE - y_value) / 8;
-} else if (y_value > (CENTER_VALUE + DEADZONE)) {
-    brightness_red = (y_value - (CENTER_VALUE + DEADZONE)) / 8;
-}
+       // Mapeia o valor do eixo  para o brilho do LED Vermelho
+        uint8_t brightness_red = 0;
+        if (y_value < (CENTER_VALUE - DEADZONE)) {
+        brightness_red = (CENTER_VALUE - DEADZONE - y_value) / 8;
+        } else if (y_value > (CENTER_VALUE + DEADZONE)) {
+        brightness_red = (y_value - (CENTER_VALUE + DEADZONE)) / 8;
+        }
 
-// Mapeia o valor do eixo X para o brilho do LED Azul
-uint8_t brightness_blue = 0;
-if (x_value < (CENTER_VALUE - DEADZONE)) {
-    brightness_blue = (CENTER_VALUE - DEADZONE - x_value) / 8;
-} else if (x_value > (CENTER_VALUE + DEADZONE)) {
-    brightness_blue = (x_value - (CENTER_VALUE + DEADZONE)) / 8;
-}
+        // Mapeia o valor do eixo X para o brilho do LED Azul
+        uint8_t brightness_blue = 0;
+        if (x_value < (CENTER_VALUE - DEADZONE)) {
+        brightness_blue = (CENTER_VALUE - DEADZONE - x_value) / 8;
+        } else if (x_value > (CENTER_VALUE + DEADZONE)) {
+        brightness_blue = (x_value - (CENTER_VALUE + DEADZONE)) / 8;
+        }
+
         // Define o ciclo de trabalho do PWM para controlar o brilho dos LEDs
         if (pwm_leds_enabled) {
             pwm_set_gpio_level(LED_RED_PIN, brightness_red);   // LED Vermelho
@@ -207,7 +205,7 @@ if (x_value < (CENTER_VALUE - DEADZONE)) {
         // Apagar o quadrado anterior
         ssd1306_fill(&ssd, false);  // Limpa a tela
 
-        // Desenha a borda (novamente para garantir que ela seja desenhada)
+        
         // Desenha a borda com a espessura atual
         draw_border(&ssd, border_thickness);
 
