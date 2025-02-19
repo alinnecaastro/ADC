@@ -8,6 +8,7 @@
 #include "ws2812.pio.h"
 #include "libs/definicoes.h"//arquivos para variaveis globais
 #include "libs/debounce.c"//arquivos para debounce
+#include "libs/pwm_led.c"//arquivos para debounce
 #include <stdlib.h>
 #include "hardware/i2c.h"
 #include "ssd1306.h"
@@ -23,20 +24,7 @@ bool pwm_leds_enabled = true;       // Estado dos LEDs PWM (Vermelho e Azul)
 uint8_t border_style = 0;           // Estilo da borda do display (0, 1, 2, ...)
 
 
-// Função para configurar o PWM
-void setup_pwm(uint pin) {
-    gpio_set_function(pin, GPIO_FUNC_PWM);
-    uint slice_num = pwm_gpio_to_slice_num(pin);
-    pwm_set_wrap(slice_num, JOYSTICK_MAX);
-    pwm_set_enabled(slice_num, true);
-}
 
-// Função para definir o duty cycle do PWM
-void set_pwm_duty(uint pin, uint16_t duty) {
-    uint slice_num = pwm_gpio_to_slice_num(pin);
-    uint channel = pwm_gpio_to_channel(pin);
-    pwm_set_chan_level(slice_num, channel, duty);
-}
 
 // Função para ler o valor do joystick
 uint16_t read_joystick(uint pin) {
@@ -90,6 +78,7 @@ void draw_square(ssd1306_t *disp, int x, int y) {
     ssd1306_rect(disp, x, y, SQUARE_SIZE, SQUARE_SIZE, true,true); // Desenha o quadrado
     ssd1306_send_data(disp); // Atualiza o display
 }
+
 int main() {
     // Inicialização do stdio
     stdio_init_all();

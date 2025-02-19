@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "hardware/gpio.h"
 #include "definicoes.h"
+
 // Função para configurar o PWM
 void setup_pwm(uint pin) {
     gpio_set_function(pin, GPIO_FUNC_PWM);
