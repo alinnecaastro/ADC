@@ -37,12 +37,13 @@ Os eixos X e Y do joystick fornecem valores analógicos que são lidos via ADC. 
 
 - LED Azul (eixo Y): Quando o joystick é movido para cima (valores menores no eixo Y), o LED azul tem seu brilho aumentado. Quando o joystick é movido para baixo (valores maiores no eixo Y), o brilho também aumenta, até o valor máximo.
 - LED Vermelho (eixo X): Da mesma forma, o LED vermelho tem seu brilho ajustado com base nos valores do eixo X.
-Movimento do Quadrado no Display SSD1306
+- Movimento do Quadrado no Display SSD1306
 A posição do quadrado de 8x8 pixels no display SSD1306 é ajustada de acordo com os valores do joystick. À medida que o joystick é movido, o quadrado se desloca na tela, refletindo a posição dos eixos X e Y.
 
 # Interrupções de Botões
 - Botão do Joystick: Ao ser pressionado, alterna o estado de um LED verde e altera o estilo da borda do display SSD1306.
 - Botão A: Ativa ou desativa a modulação de PWM para os LEDs, permitindo que os LEDs deixem de ser controlados por PWM se desejado.
+
 # Tratamento de Debounce
 O debounce foi implementado para garantir que o sistema não registre múltiplos pressionamentos de botão em sequência, causado por variações no sinal dos botões. Para isso, foi aplicado um atraso de tempo após o acionamento de qualquer botão, garantindo que o sistema ignore pressões muito rápidas.
 
