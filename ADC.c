@@ -61,13 +61,15 @@ void joystick_button_pressed() {
     if (current_time - last_press_time > 200) {  // 200 ms de debounce
         led_green_state = !led_green_state;      // Alterna o estado do LED Verde
         gpio_put(LED_GREEN_PIN, led_green_state); // Atualiza o estado do LED
+        
 
-        // Aumenta a espessura da borda
-        border_thickness++;
-        if (border_thickness > 5) {  // Limita a espessura máxima da borda
-            border_thickness = 1;
+        // Alterna a espessura da borda entre 1 e 5
+        if (border_thickness == 5) {
+            border_thickness = 1;  // Se a espessura for 5, altera para 1
+        } else {
+            border_thickness = 5;  // Se a espessura for 1, altera para 5
         }
-
+      
         last_press_time = current_time;  // Atualiza o tempo do último pressionamento
     }
 }
