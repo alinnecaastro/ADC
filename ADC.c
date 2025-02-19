@@ -8,7 +8,6 @@
 #include "ws2812.pio.h"
 #include "libs/definicoes.h"//arquivos para variaveis globais
 #include "libs/debounce.c"//arquivos para debounce
-#include "libs/pwm_led.c"//arquivos para variaveis globais
 #include <stdlib.h>
 #include "hardware/i2c.h"
 #include "ssd1306.h"
@@ -16,11 +15,55 @@
 #include "pico/bootrom.h"
 #include "hardware/adc.h"
 
+#define JOYSTICK_X_PIN 26  // Pino ADC conectado ao eixo Y do joystick
+#define JOYSTICK_Y_PIN 27  // Pino ADC conectado ao eixo Y do joystick
+#define BUTTON_PIN 22
+#define LED_GREEN_PIN 11
+#define LED_BLUE_PIN 12   // Pino PWM conectado ao LED Azul
+#define LED_RED_PIN 13   // Pino PWM conectado ao LED Azul
+#define CENTER_VALUE 2048
+#define JOYSTICK_MAX 4095
+#define DEADZONE 110
+#define BUTTON_A_PIN  5
+
+
+// Definições para o display
+#define WIDTH 128
+#define HEIGHT 64
+#define SQUARE_SIZE 8
+#define I2C_SDA_PIN 14   // Pino SDA do I2C
+#define I2C_SCL_PIN 15     // Pino SCL do I2C
+#define I2C_PORT i2c1
+#define endereco 0x3C
+
+
 
 // Variáveis de estado
 bool led_green_state = false;       // Estado do LED Verde
 bool pwm_leds_enabled = true;       // Estado dos LEDs PWM (Vermelho e Azul)
 uint8_t border_style = 0;           // Estilo da borda do display (0, 1, 2, ...)
+
+
+// Função para configurar o PWM
+void setup_pwm(uint pin) {
+    gpio_set_function(pin, GPIO_FUNC_PWM);
+    uint slice_num = pwm_gpio_to_slice_num(pin);
+    pwm_set_wrap(slice_num, JOYSTICK_MAX);
+    pwm_set_enabled(slice_num, true);
+}
+
+// Função para definir o duty cycle do PWM
+void set_pwm_duty(uint pin, uint16_t duty) {
+    uint slice_num = pwm_gpio_to_slice_num(pin);
+    uint channel = pwm_gpio_to_channel(pin);
+    pwm_set_chan_level(slice_num, channel, duty);
+}
+
+// Função para ler o valor do joystick
+uint16_t read_joystick(uint pin) {
+    adc_select_input(pin - 26);
+    return adc_read();
+}
 
 // Função para desenhar um quadrado no display
 void draw_square(ssd1306_t *disp, int x, int y) {
@@ -34,13 +77,6 @@ void draw_border(ssd1306_t *disp) {
     ssd1306_rect(disp, 0, 0, WIDTH, HEIGHT, true, false);  // Borda do display
     ssd1306_send_data(disp);  // Atualiza o display
 }
-
-// Função para ler o valor do joystick
-uint16_t read_joystick(uint pin) {
-    adc_select_input(pin - 26);
-    return adc_read();
-}
-
 
 // Função para alternar o LED Verde e a borda do display
 void joystick_button_pressed() {
@@ -140,7 +176,7 @@ int main() {
         int16_t y_diff = y_value - CENTER_VALUE;
 
        // Mapeia o valor do eixo Y para o brilho do LED Vermelho
-        uint8_t brightness_red = 0;
+uint8_t brightness_red = 0;
 if (y_value < (CENTER_VALUE - DEADZONE)) {
     brightness_red = (CENTER_VALUE - DEADZONE - y_value) / 8;
 } else if (y_value > (CENTER_VALUE + DEADZONE)) {
