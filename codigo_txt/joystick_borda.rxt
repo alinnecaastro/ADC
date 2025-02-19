@@ -71,6 +71,7 @@ void joystick_button_pressed() {
         last_press_time = current_time;  // Atualiza o tempo do último pressionamento
     }
 }
+
 // Função para ativar/desativar os LEDs PWM
 void button_a_pressed() {
     static uint32_t last_press_time = 0;  // Armazena o tempo do último pressionamento
