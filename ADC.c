@@ -163,8 +163,8 @@ int main() {
 
 
     // Posição inicial do quadrado
-    int square_x = (WIDTH - SQUARE_SIZE)/2;
-    int square_y = (HEIGHT - SQUARE_SIZE)/2;
+    int square_y = (WIDTH - SQUARE_SIZE)/2;
+    int square_x = (HEIGHT - SQUARE_SIZE)/2;
 
     while (true) {
         // Leitura dos valores do joystick
