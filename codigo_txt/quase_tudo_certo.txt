@@ -6,7 +6,6 @@
 #include "hardware/pwm.h"
 #include "pico/bootrom.h"
 #include "ws2812.pio.h"
-#include "libs/numeros.c"//arquivos para implementação dos numeros
 #include "libs/definicoes.h"//arquivos para variaveis globais
 #include "libs/debounce.c"//arquivos para debounce
 #include <stdlib.h>
@@ -164,8 +163,8 @@ int main() {
 
 
     // Posição inicial do quadrado
-    int square_x = (WIDTH - SQUARE_SIZE)/2;
-    int square_y = (HEIGHT - SQUARE_SIZE)/2;
+    int square_y = (WIDTH - SQUARE_SIZE)/2;
+    int square_x = (HEIGHT - SQUARE_SIZE)/2;
 
     while (true) {
         // Leitura dos valores do joystick
