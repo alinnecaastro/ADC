@@ -206,3 +206,20 @@ void ssd1306_draw_string(ssd1306_t *ssd, const char *str, uint8_t x, uint8_t y)
 void ssd1306_draw_square(ssd1306_t *ssd, uint8_t x, uint8_t y, uint8_t size, bool value, bool fill) {
   ssd1306_rect(ssd, y, x, size, size, value, fill);
 }
+
+void ssd1306_draw_pixel(ssd1306_t *ssd, uint8_t x, uint8_t y, uint8_t color) {
+  if (x >= ssd->width || y >= ssd->height) {
+      return;  // Se a coordenada estiver fora dos limites do display, não faça nada
+  }
+
+  // Calcular o byte que contém o pixel no buffer
+  uint16_t byteIndex = (y / 8) * ssd->width + x;
+  uint8_t bitIndex = y % 8;
+
+  // Se o parâmetro 'color' for 1, o pixel será desenhado; se for 0, será apagado
+  if (color == 1) {
+      ssd->ram_buffer[byteIndex] |= (1 << bitIndex);  // Setar o bit correspondente
+  } else {
+      ssd->ram_buffer[byteIndex] &= ~(1 << bitIndex);  // Limpar o bit correspondente
+  }
+}

@@ -43,6 +43,11 @@
         "ssd1306.h": "c",
         "stdlib.h": "c",
         "ws2812.pio.h": "c",
-        "font.h": "c"
+        "font.h": "c",
+        "i2c.h": "c",
+        "pwm.h": "c",
+        "clocks.h": "c",
+        "stdio.h": "c",
+        "time.h": "c"
     }
 }

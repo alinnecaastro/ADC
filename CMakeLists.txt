@@ -40,6 +40,8 @@ add_executable(ADC ADC.c ssd1306.c)
 pico_set_program_name(ADC "ADC")
 pico_set_program_version(ADC "0.1")
 
+pico_generate_pio_header(ADC ${CMAKE_CURRENT_LIST_DIR}/ws2818b.pio)
+
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(ADC 1)
 pico_enable_stdio_usb(ADC 1)
